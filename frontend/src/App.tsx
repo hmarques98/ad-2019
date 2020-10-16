@@ -1,13 +1,14 @@
 import React from "react";
 import GlobalStyles from "./config/globalStyle";
-import DashBoard from "./pages/DashBoard";
+import { UserProvider } from "./contexts/User";
+import Routes from "./routes";
 
 function App() {
   return (
-    <>
-      <DashBoard />
+    <UserProvider>
+      <Routes />
       <GlobalStyles />
-    </>
+    </UserProvider>
   );
 }
 

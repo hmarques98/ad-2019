@@ -1,15 +1,13 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useContext } from "react";
+import { Link } from "react-router-dom";
+import { UsersContext } from "../../contexts/User";
 
-import { Container, Form, InfoHeader, UserList, CustomButton } from "./styles";
+import { Container, Form, InfoHeader, CustomButton } from "./styles";
 
 const DashBoard: React.FC = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [users, setUser] = useState<User[]>([]);
-  const [editable, setEditable] = useState(false);
-  const [updateUser, setUpdateUser] = useState<any>();
-  const [id, setId] = useState<number>();
-
+  const { users, setUser } = useContext(UsersContext);
   const signUpUser = useCallback(() => {
     const user = {
       name,
@@ -24,24 +22,7 @@ const DashBoard: React.FC = () => {
     } else {
       alert("preencha os campos que faltam");
     }
-  }, [email, name, users]);
-
-  const handleDelete = (id: number) => {
-    let filtered = users.filter((item, index) => index !== id);
-    setUser(filtered);
-  };
-
-  const handleUpdate = (idUser: number, userUpdate: User) => {
-    setUpdateUser(userUpdate);
-    setEditable(!editable);
-    setUser(users.map((user, index) => (index === idUser ? updateUser : user)));
-  };
-
-  const handleEdit = (id: number, userEdit: User) => {
-    setId(id);
-    setUpdateUser(userEdit);
-    setEditable(!editable);
-  };
+  }, [email, name, setUser, users]);
 
   return (
     <Container>
@@ -57,17 +38,22 @@ const DashBoard: React.FC = () => {
       </InfoHeader>
 
       <Form onSubmit={(e) => e.preventDefault()}>
+        <label htmlFor="email">Seu Nome</label>
         <input
           type="text"
           name="name"
           id="name"
+          placeholder="Seu Nome"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
+        <label htmlFor="email">Seu Email</label>
         <input
-          type="text"
+          pattern=".+@globex.com"
+          type="email"
           name="email"
           id="email"
+          placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value.trim())}
         />
@@ -75,84 +61,13 @@ const DashBoard: React.FC = () => {
           Sign Up
         </CustomButton>
       </Form>
-      <UserList>
-        {users.map((user, index) => {
-          return (
-            <div key={index}>
-              <h2>
-                Name:{" "}
-                {editable && index === id ? (
-                  <input
-                    value={updateUser?.name}
-                    onChange={(e) =>
-                      setUpdateUser({
-                        ...updateUser,
-                        name: e.target.value,
-                      })
-                    }
-                  />
-                ) : (
-                  <p>{user.name}</p>
-                )}
-              </h2>
-              <h2>
-                Email:{" "}
-                {editable && index === id ? (
-                  <input
-                    value={updateUser?.email}
-                    onChange={(e) =>
-                      setUpdateUser({
-                        ...updateUser,
-                        email: e.target.value.trim(),
-                      })
-                    }
-                  />
-                ) : (
-                  <p>{user.email} </p>
-                )}
-              </h2>
-
-              <div className="buttons">
-                {editable && index === id ? (
-                  <CustomButton
-                    customColor={"#307358"}
-                    onClick={() => {
-                      handleUpdate(index, user);
-                    }}
-                  >
-                    Update
-                  </CustomButton>
-                ) : (
-                  <CustomButton
-                    customColor={"#291E71"}
-                    onClick={() => {
-                      handleEdit(index, user);
-                    }}
-                  >
-                    Edit
-                  </CustomButton>
-                )}
-                <CustomButton
-                  customColor={"#E9260C"}
-                  onClick={() => {
-                    handleDelete(index);
-                  }}
-                >
-                  Delete
-                </CustomButton>
-              </div>
-            </div>
-          );
-        })}
-      </UserList>
+      <Link className="link" to="draw-page">
+        <CustomButton customColor="black">
+          Ver lista de cadastrados
+        </CustomButton>
+      </Link>
     </Container>
   );
 };
 
 export default DashBoard;
-
-interface User {
-  name: string;
-  email: string;
-  secretFriend?: string | null;
-}
