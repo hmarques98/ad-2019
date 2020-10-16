@@ -1,0 +1,54 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-size: 100%;
+}
+
+.App {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.form_input {
+  background-color: rgb(128, 83, 17);
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.form_input input {
+  height: 40px;
+  margin: 20px;
+  width: 300px;
+}
+.form_input button {
+  width: 100px;
+  height: 40px;
+}
+
+.form_usersList {
+  display: flex;
+  flex-direction: column;
+  background-color: black;
+  height: 100%;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.form_usersList div {
+  max-width: 80%;
+  padding: 20px;
+}
+.form_usersList h1,
+.form_usersList p {
+  color: aliceblue;
+}
+.form_usersList h1 {
+  font-size: 1.8rem;
+}
+.form_usersList p {
+  font-size: 1.3rem;
+}
