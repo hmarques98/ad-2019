@@ -1,26 +1,27 @@
 import sgMail, { MailDataRequired } from "@sendgrid/mail";
+
 sgMail.setApiKey(`${process.env.SENDGRID_API_KEY}`);
+interface Data {
+  name: string;
+  email: string;
+  secretFriend: string;
+}
 
-export async function sendEmail(emailTo: string, name: string) {
-  const msg: MailDataRequired = {
-    to: {
-      email: emailTo,
-      name,
-    },
-    from: {
-      email: "marquesprogrammer@hotmail.com",
-      name: "Henrique Marques Dev",
-    }, // Use the email address or domain you verified above
-    subject: "Aqui está o seu amigo secreto",
-    html: `
-        
-        <body>
-        <h1 style="color:red; font-size:28px;">Seu amigo secreto é ${name}</h1>
-        <img src="https://images.unsplash.com/photo-1494548162494-384bba4ab999?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80" alt="image" width="250" height="250"/>
-        <p style="color:blue;">Obrigado por participar do amigo secreto! </p>
-        </body>
-        `,
-  };
+export async function sendEmail(array: [] | any) {
+  let emails = array.map((items: Data) => {
+    return {
+      to: {
+        name: `${items.name}`,
+        email: `${items.email}`,
+      },
+      from: {
+        name: "Henrique Marques",
+        email: "marquesprogrammer@hotmail.com",
+      },
+      subject: `Olá, ${items.name}! Sorteio Realizado e seu amigo secreto é...`,
+      html: `<p>Seu amigo secreto é ${items.secretFriend}. Prepara o presente</p>`,
+    };
+  });
 
-  return await sgMail.send(msg);
+  return await sgMail.send(emails);
 }

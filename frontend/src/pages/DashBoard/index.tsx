@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useContext } from "react";
+import React, { useCallback, useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { UsersContext } from "../../contexts/User";
 
@@ -23,6 +23,9 @@ const DashBoard: React.FC = () => {
       alert("preencha os campos que faltam");
     }
   }, [email, name, setUser, users]);
+  useEffect(() => {
+    localStorage.setItem("user", JSON.stringify(users));
+  }, [users]);
 
   return (
     <Container>
@@ -33,7 +36,7 @@ const DashBoard: React.FC = () => {
             : `Temos ${users.length} na lista para sorteio`}
         </p>
         <CustomButton customColor={"#E75A0D"}>
-          {users.length >= 3 ? "Sorteio liberado" : "Precisa ter 3 ou mais"}
+          {users.length >= 4 ? "Sorteio liberado" : "Precisa ter 4 ou mais."}
         </CustomButton>
       </InfoHeader>
 

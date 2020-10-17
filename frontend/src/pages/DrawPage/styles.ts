@@ -7,13 +7,13 @@ export const Container = styled.div`
   height: 100vh;
 `;
 
-export const UserList = styled.div`
+export const UserList = styled.form`
   background-color: #020122;
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
 
-  h2 {
+  label {
     font-size: 1.4rem;
     margin: 1.3rem;
     display: flex;

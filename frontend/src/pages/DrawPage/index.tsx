@@ -1,11 +1,12 @@
-import React, { useContext, useState } from "react";
-import { FiTrash2, FiEdit } from "react-icons/fi";
+import React, { FormEvent, useContext, useState } from "react";
+import { FiTrash2, FiEdit, FiSend } from "react-icons/fi";
 import { AiOutlineFileDone } from "react-icons/ai";
 
 import { User, UsersContext } from "../../contexts/User";
 
 import { CustomButton } from "../DashBoard/styles";
 import { UserList, Container } from "./styles";
+import api from "../../services/api";
 
 const DrawPage: React.FC = () => {
   const [editable, setEditable] = useState(false);
@@ -36,16 +37,33 @@ const DrawPage: React.FC = () => {
     setEditable(!editable);
   };
 
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    let data = users.map((user) => {
+      return {
+        name: user.name,
+        email: user.email,
+      };
+    });
+    try {
+      await api.post("/register", data);
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Container>
-      <UserList>
+      <UserList onSubmit={handleSubmit}>
         {users.map((user, index) => {
           return (
             <div key={index}>
-              <h2>
+              <label>
                 Name:{" "}
                 {editable && index === id ? (
                   <input
+                    name="name"
                     value={updateUser?.name}
                     onChange={(e) =>
                       setUpdateUser({
@@ -57,11 +75,12 @@ const DrawPage: React.FC = () => {
                 ) : (
                   <p>{user.name}</p>
                 )}
-              </h2>
-              <h2>
+              </label>
+              <label>
                 Email:{" "}
                 {editable && index === id ? (
                   <input
+                    name="email"
                     type="email"
                     value={updateUser?.email}
                     onChange={(e) =>
@@ -74,7 +93,7 @@ const DrawPage: React.FC = () => {
                 ) : (
                   <p>{user.email} </p>
                 )}
-              </h2>
+              </label>
 
               <div className="buttons">
                 {editable && index === id ? (
@@ -108,6 +127,9 @@ const DrawPage: React.FC = () => {
             </div>
           );
         })}
+        <CustomButton type="submit" customColor={"#005"}>
+          <FiSend size={28} />
+        </CustomButton>
       </UserList>
     </Container>
   );

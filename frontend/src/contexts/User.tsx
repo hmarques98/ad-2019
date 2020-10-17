@@ -13,7 +13,10 @@ export interface IUsersContex {
 const UsersContext = createContext({} as IUsersContex);
 
 const UserProvider: React.FC = ({ children }) => {
-  const [users, setUser] = useState<User[]>([]);
+  const [users, setUser] = useState<User[]>(() => {
+    const data = JSON.parse(localStorage.getItem("user") as any);
+    return data;
+  });
 
   return (
     <UsersContext.Provider value={{ setUser, users }}>
