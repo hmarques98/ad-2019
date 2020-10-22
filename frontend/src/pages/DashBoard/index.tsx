@@ -12,7 +12,7 @@ const DashBoard: React.FC = () => {
     const user = {
       name,
       email,
-      secretFriend: null,
+      secretFriend: "",
     };
     const newUser = [...users, user];
     if (name.length && email.length) {
@@ -31,12 +31,16 @@ const DashBoard: React.FC = () => {
     <Container>
       <InfoHeader>
         <p>
-          {users.length === 0
-            ? "Não temos ninguem cadastrado"
-            : `Temos ${users.length} na lista para sorteio`}
+          {users
+            ? users?.length === 0
+              ? "Não temos ninguem cadastrado"
+              : `Temos ${users.length} na lista para sorteio`
+            : ""}
         </p>
         <CustomButton customColor={"#E75A0D"}>
-          {users.length >= 4 ? "Sorteio liberado" : "Precisa ter 4 ou mais."}
+          {users && users.length >= 4
+            ? "Sorteio liberado"
+            : "Precisa ter 4 ou mais."}
         </CustomButton>
       </InfoHeader>
 

@@ -36,52 +36,55 @@ export default {
     }
   },
   async create(request: Request, response: Response) {
-    const { name, email } = request.body;
     try {
-      const users = await User.create({ name, email });
-
-      await users.save();
-      const data = await User.find();
-      if (data.length >= 4) {
-        const send = sendEmail(data);
-
-        if (send) {
-          return response.status(200).json("o email foi enviado");
-        } else {
-          return response.status(400).json("Deu errado");
+      const data = request.body;
+      const users = await User.insertMany(data);
+      await users.save((err, result) => {
+        if (err) {
+          console.log("error");
         }
-      }
+        response.json("user created");
+      });
+      const user = await User.find();
+      // if (user.length >= 4) {
+      //   const send = sendEmail(user);
+
+      //   if (send) {
+      //     return response.status(200).json("o email foi enviado");
+      //   } else {
+      //     return response.status(400).json("Deu errado");
+      //   }
+      // }
     } catch (error) {
-      console.log(error);
+      response.json(error);
     }
-    return response.json("done");
   },
   async update(request: Request, response: Response) {
     // const { id } = request.params;
 
     try {
       const users = await User.find();
-      const drawnUser = draw(users);
-      const idFriendSender = drawnUser.map((user) => {
-        return user.friendSender._id;
-      });
+      // const drawnUser = draw(users);
+      // const idFriendSender = drawnUser.map((user) => {
+      //   return user.friendSender._id;
+      // });
 
-      const secretFriend = drawnUser.map((user) => {
-        return user.secretFriendDrawn.name;
-      });
-      console.log(secretFriend);
-      const user = await User.updateMany(
-        { _id: idFriendSender },
-        { secretFriend: secretFriend },
-        {
-          new: true,
-        }
-      );
-      await user?.save();
-      if (!user) {
+      // const secretFriend = drawnUser.map((user) => {
+      //   return user.secretFriendDrawn.name;
+      // });
+      // console.log(secretFriend);
+      // const user = await User.updateMany(
+      //   { _id: idFriendSender },
+      //   { secretFriend: secretFriend },
+      //   {
+      //     new: true,
+      //   }
+      // );
+      // await users.save();
+      if (!users) {
         return response.status(404).json("not found");
       }
-      return response.status(200).json(user);
+      return response.status(200).json(users);
     } catch (err) {
       response.status(500).json(err);
     }

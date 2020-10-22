@@ -15,7 +15,11 @@ const UsersContext = createContext({} as IUsersContex);
 const UserProvider: React.FC = ({ children }) => {
   const [users, setUser] = useState<User[]>(() => {
     const data = JSON.parse(localStorage.getItem("user") as any);
-    return data;
+    if (data) {
+      return data;
+    } else {
+      return [];
+    }
   });
 
   return (

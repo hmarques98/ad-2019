@@ -42,7 +42,9 @@ export const Form = styled.form`
 interface PropsButton {
   customColor?: string;
 }
-export const CustomButton = styled.button<PropsButton>`
+export const CustomButton = styled.button.attrs({
+  type: "button",
+})<PropsButton>`
   background-color: ${(props) => props.customColor};
   width: clamp();
 

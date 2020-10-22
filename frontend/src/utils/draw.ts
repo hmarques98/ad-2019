@@ -9,7 +9,7 @@ export const draw = (array: [] | any) => {
     //index do amigo remetente
     let secretFriendIndex = Math.floor(Math.random() * lengthAllUsers.length);
     //index do amigo secreto
-    while (array[secretFriendIndex] == friendSender) {
+    while (array[secretFriendIndex] === friendSender) {
       //evitando amigo secreto ser o remetente, no caso a mesma pessoa
       //e fazendo outro random
       secretFriendIndex = Math.floor(Math.random() * lengthAllUsers.length);
