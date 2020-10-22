@@ -37,15 +37,26 @@ export default {
   },
   async create(request: Request, response: Response) {
     try {
-      const data = request.body;
-      const users = await User.insertMany(data);
-      await users.save((err, result) => {
-        if (err) {
-          console.log("error");
+      const { draw } = request.body;
+      const drawers = draw.map(
+        (items: { name: string; email: string; secretFriend: string }) => {
+          return {
+            name: items.name,
+            email: items.email,
+            secretFriend: items.secretFriend,
+          };
         }
-        response.json("user created");
-      });
-      const user = await User.find();
+      );
+      const { didWho } = request.body;
+      const data = {
+        draw: drawers,
+        didWho,
+      };
+
+      const users = await User.insertMany(data);
+      response.json(users);
+
+      // const user = await User.find();
       // if (user.length >= 4) {
       //   const send = sendEmail(user);
 
