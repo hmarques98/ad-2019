@@ -66,9 +66,9 @@ const DrawPage: React.FC = () => {
     };
 
     try {
-      if (users.length % 2) {
-        setUser([]);
+      if (users.length % 2 === 0) {
         await api.post("create", drawResult);
+        setUser([]);
       }
       alert("Numero de participantes tem que ser par");
     } catch (error) {
