@@ -24,17 +24,3 @@ const DrawSchema = new mongoose.Schema(
 
 const Draw = mongoose.model("Draw", DrawSchema);
 export default Draw;
-// name: {
-//   type: String,
-//   trim: true,
-// },
-// email: {
-//   type: String,
-//   trim: true,
-//   lowercase: true,
-// },
-// secretFriend: {
-//   type: String,
-//   trim: true,
-//   lowercase: true,
-// },

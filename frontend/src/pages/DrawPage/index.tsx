@@ -14,11 +14,15 @@ import {
 import api from "../../services/api";
 import { draw } from "../../utils/draw";
 
+interface IDraw {
+  draw: User[];
+  who: string;
+}
+
 const DrawPage: React.FC = () => {
   const [editable, setEditable] = useState(false);
   const [updateUser, setUpdateUser] = useState<any>();
   const [id, setId] = useState<number>();
-  const [drawerUsers, setDrawerUser] = useState<User[]>([]);
 
   const { users, setUser } = useContext(UsersContext);
   const history = useHistory();
@@ -55,12 +59,15 @@ const DrawPage: React.FC = () => {
         secretFriend: items.secretFriendDrawn.name,
       };
     });
-    setDrawerUser(result);
-    console.log(drawerUsers);
+
+    const drawResult = {
+      who: "Henrique",
+      draw: result,
+    };
 
     try {
-      const res = await api.post("/register", drawerUsers);
-      console.log(res);
+      await api.post("create", drawResult);
+      setUser([]);
     } catch (error) {
       console.log(error);
     }
