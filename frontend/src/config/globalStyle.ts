@@ -13,6 +13,7 @@ const GlobalStyles = createGlobalStyle`
     body, html{
         font-family:sans-serif;
         color:white;
+        background-color: #020122;
     }
 
 `;

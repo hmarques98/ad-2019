@@ -1,8 +1,10 @@
 import React, { useCallback, useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
+import Header from "../../components/Header";
 import { UsersContext } from "../../contexts/User";
+import { CustomInput } from "../DrawPage/styles";
 
-import { Container, Form, InfoHeader, CustomButton } from "./styles";
+import { Container, Form, CustomButton } from "./styles";
 
 const DashBoard: React.FC = () => {
   const [name, setName] = useState("");
@@ -29,24 +31,11 @@ const DashBoard: React.FC = () => {
 
   return (
     <Container>
-      <InfoHeader>
-        <p>
-          {users
-            ? users?.length === 0
-              ? "Não temos ninguem cadastrado"
-              : `Temos ${users.length} na lista para sorteio`
-            : ""}
-        </p>
-        <CustomButton customColor={"#E75A0D"}>
-          {users && users.length >= 4
-            ? "Sorteio liberado"
-            : "Precisa ter 4 ou mais."}
-        </CustomButton>
-      </InfoHeader>
+      <Header users={users} />
 
       <Form onSubmit={(e) => e.preventDefault()}>
         <label htmlFor="email">Seu Nome</label>
-        <input
+        <CustomInput
           type="text"
           name="name"
           id="name"
@@ -55,7 +44,7 @@ const DashBoard: React.FC = () => {
           onChange={(e) => setName(e.target.value)}
         />
         <label htmlFor="email">Seu Email</label>
-        <input
+        <CustomInput
           pattern=".+@globex.com"
           type="email"
           name="email"
@@ -64,15 +53,20 @@ const DashBoard: React.FC = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value.trim())}
         />
-        <CustomButton customColor={"#2F4858"} onClick={signUpUser}>
-          Sign Up
+        <CustomButton
+          customColor={"hsla(195, 97%, 13%,1)"}
+          onClick={signUpUser}
+        >
+          Cadastrar participante
         </CustomButton>
       </Form>
-      <Link className="link" to="draw-page">
-        <CustomButton customColor="black">
-          Ver lista de cadastrados
-        </CustomButton>
-      </Link>
+      {users.length >= 1 && (
+        <Link className="link" to="draw-page">
+          <CustomButton customColor="hsla(16, 87%, 62%,1)">
+            Ver lista de cadastrados
+          </CustomButton>
+        </Link>
+      )}
     </Container>
   );
 };

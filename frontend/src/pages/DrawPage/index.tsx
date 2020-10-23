@@ -1,11 +1,16 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FiTrash2, FiEdit, FiSend } from "react-icons/fi";
 import { AiOutlineFileDone } from "react-icons/ai";
-
+import { useHistory } from "react-router-dom";
 import { User, UsersContext } from "../../contexts/User";
 
-import { CustomButton } from "../DashBoard/styles";
-import { UserList, Container } from "./styles";
+import {
+  Container,
+  ContainerSubmit,
+  CustomInput,
+  FormContainer,
+  HandlesButton,
+} from "./styles";
 import api from "../../services/api";
 import { draw } from "../../utils/draw";
 
@@ -16,6 +21,7 @@ const DrawPage: React.FC = () => {
   const [drawerUsers, setDrawerUser] = useState<User[]>([]);
 
   const { users, setUser } = useContext(UsersContext);
+  const history = useHistory();
 
   const handleDelete = (id: number) => {
     let filtered = users.filter((item, index) => index !== id);
@@ -60,21 +66,26 @@ const DrawPage: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    if (users.length === 0) {
+      history.push("/");
+    }
+
+    localStorage.setItem("user", JSON.stringify(users));
+  }, [history, users]);
+
   return (
     <Container>
-      <button type="button" onClick={handleSubmit}>
-        <FiSend size={28} />
-      </button>
-      <UserList>
+      <div>
         {users
           ? users.map((user, index) => {
               return (
-                <div key={index}>
-                  <label>
-                    Name:{" "}
+                <FormContainer key={index}>
+                  <div>
+                    <label htmlFor="name">Name:</label>
+
                     {editable && index === id ? (
-                      <input
-                        name="name"
+                      <CustomInput
                         value={updateUser?.name}
                         onChange={(e) =>
                           setUpdateUser({
@@ -82,17 +93,18 @@ const DrawPage: React.FC = () => {
                             name: e.target.value,
                           })
                         }
+                        id="name"
+                        type="text"
                       />
                     ) : (
                       <p>{user.name}</p>
                     )}
-                  </label>
-                  <label>
-                    Email:{" "}
+                  </div>
+                  <div>
+                    {" "}
+                    <label htmlFor="email">Email:</label>
                     {editable && index === id ? (
-                      <input
-                        name="email"
-                        type="email"
+                      <CustomInput
                         value={updateUser?.email}
                         onChange={(e) =>
                           setUpdateUser({
@@ -100,46 +112,61 @@ const DrawPage: React.FC = () => {
                             email: e.target.value.trim(),
                           })
                         }
+                        id="email"
+                        type="text"
                       />
                     ) : (
-                      <p>{user.email} </p>
+                      <p>{user.email}</p>
                     )}
-                  </label>
-
-                  <div className="buttons">
+                  </div>
+                  <div>
                     {editable && index === id ? (
-                      <CustomButton
-                        customColor={"#307358"}
+                      <HandlesButton
                         onClick={() => {
                           handleUpdate(index, user);
                         }}
+                        name="update"
+                        customColor={"hsla(166, 99%, 30%,1)"}
                       >
                         <AiOutlineFileDone size={28} />
-                      </CustomButton>
+                      </HandlesButton>
                     ) : (
-                      <CustomButton
-                        customColor={"#291E71"}
+                      <HandlesButton
+                        name="edit"
                         onClick={() => {
                           handleEdit(index, user);
                         }}
+                        customColor={"hsla(200, 73%, 44%,1)"}
                       >
                         <FiEdit size={28} />
-                      </CustomButton>
+                      </HandlesButton>
                     )}
-                    <CustomButton
-                      customColor={"#E9260C"}
+                    <HandlesButton
+                      name="delete"
                       onClick={() => {
                         handleDelete(index);
                       }}
+                      customColor={"hsla(345, 92%, 55%, 1)"}
                     >
                       <FiTrash2 size={28} />
-                    </CustomButton>
+                    </HandlesButton>
                   </div>
-                </div>
+                </FormContainer>
               );
             })
           : ""}
-      </UserList>
+        <ContainerSubmit>
+          <HandlesButton
+            name="delete"
+            onClick={() => {
+              handleSubmit();
+            }}
+            customColor={"hsla(345, 92%, 55%, 1)"}
+          >
+            <FiSend size={28} />
+          </HandlesButton>
+        </ContainerSubmit>
+      </div>
     </Container>
   );
 };
