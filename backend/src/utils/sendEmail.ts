@@ -6,21 +6,25 @@ interface Data {
   email: string;
   secretFriend: string;
 }
+interface RegistersDb {
+  draw: Data[];
+  who: string;
+}
 
-export async function sendEmail(array: [] | any) {
-  let emails = array.map((items: Data) => {
-    return {
+export async function sendEmail(arrayDB: [] | any) {
+  let emails = arrayDB.map((items: RegistersDb) => {
+    return items.draw.map((drawers: Data) => ({
       to: {
-        name: `${items.name}`,
-        email: `${items.email}`,
+        name: `${drawers.name}`,
+        email: `${drawers.email}`,
       },
       from: {
         name: "Henrique Marques",
         email: "marquesprogrammer@hotmail.com",
       },
-      subject: `Olá, ${items.name}! Sorteio Realizado e seu amigo secreto é...`,
-      html: `<p>Seu amigo secreto é ${items.secretFriend}. Prepara o presente</p>`,
-    };
+      subject: `Olá, ${drawers.name}! Sorteio Realizado e seu amigo secreto é...`,
+      html: `<p>Seu amigo secreto é ${drawers.secretFriend}. Prepara o presente</p>`,
+    }));
   });
 
   return await sgMail.send(emails);

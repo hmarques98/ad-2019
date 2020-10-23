@@ -3,9 +3,9 @@ import secretUser from "./controllers/secretUser";
 
 const routes = Router();
 
-routes.get("/users", secretUser.show);
+routes.get("/registers", secretUser.show);
 
-routes.post("/register", secretUser.create);
+routes.post("/create", secretUser.create);
 
 routes.patch("/update/", secretUser.update);
 

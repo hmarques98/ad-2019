@@ -1,112 +1,85 @@
 import { Response, Request } from "express";
-import User from "../models/User";
+import Draw from "../models/Draw";
 import { sendEmail } from "../utils/sendEmail";
+
+interface IDraw {
+  name: string;
+  secretFriend: string;
+  email: string;
+}
 
 export default {
   async index(request: Request, response: Response) {},
   async show(request: Request, response: Response) {
     try {
-      const users = await User.find({}, {}, { limit: 10, skip: 0 });
-      // const drawnUser = draw(users);
+      const registersInDB = await Draw.find().sort({ _id: -1 }).limit(1);
+      const res = registersInDB.map((items: [] | any) => {
+        return items.draw.map((item: IDraw) => ({
+          name: item.name,
+          secretFriend: item.secretFriend,
+          email: item.email,
+        }));
+      });
 
-      // const nameFriendSender = drawnUser.map((user) => {
-      //   return user.friendSender._id;
-      // });
-
-      // const secretFriend = drawnUser.map((user) => {
-      //   return user.secretFriendDrawn.name;
-      // });
-
-      // const user = await User.updateMany(
-      //   { name: idFriendSender },
-      //   {
-      //     $push: {
-      //       secretFriend: secretFriend,
-      //     },
-      //   }
-      // );
-      // await user?.save();
-
-      // if (!user) {
-      //   return response.status(404).json("not found");
-      // }
-      return response.status(200).json(users);
+      return response.status(200).json(res);
     } catch (err) {
-      return response.status(400).json("Error");
+      return response.status(400).json(err);
     }
   },
   async create(request: Request, response: Response) {
     try {
       const { draw } = request.body;
-      const drawers = draw.map(
-        (items: { name: string; email: string; secretFriend: string }) => {
-          return {
-            name: items.name,
-            email: items.email,
-            secretFriend: items.secretFriend,
-          };
-        }
-      );
-      const { didWho } = request.body;
+      const drawers = draw.map((items: IDraw) => {
+        return {
+          name: items.name,
+          email: items.email,
+          secretFriend: items.secretFriend,
+        };
+      });
+      const { who } = request.body;
       const data = {
         draw: drawers,
-        didWho,
+        who,
       };
 
-      const users = await User.insertMany(data);
-      response.json(users);
+      await Draw.insertMany(data);
 
-      // const user = await User.find();
-      // if (user.length >= 4) {
-      //   const send = sendEmail(user);
+      //sorteio
+      const registersInDB = await Draw.find().sort({ _id: -1 }).limit(1);
+      const drawersLength = registersInDB.map((items: [] | any) => {
+        return items.draw;
+      });
 
-      //   if (send) {
-      //     return response.status(200).json("o email foi enviado");
-      //   } else {
-      //     return response.status(400).json("Deu errado");
-      //   }
-      // }
+      if (drawersLength.length % 2) {
+        let send = sendEmail(registersInDB);
+        if (send) {
+          response.status(201).json({ message: "Draw was done" });
+        } else {
+          response.json("error");
+        }
+      }
     } catch (error) {
       response.json(error);
     }
   },
   async update(request: Request, response: Response) {
-    // const { id } = request.params;
-
     try {
-      const users = await User.find();
-      // const drawnUser = draw(users);
-      // const idFriendSender = drawnUser.map((user) => {
-      //   return user.friendSender._id;
-      // });
-
-      // const secretFriend = drawnUser.map((user) => {
-      //   return user.secretFriendDrawn.name;
-      // });
-      // console.log(secretFriend);
-      // const user = await User.updateMany(
-      //   { _id: idFriendSender },
-      //   { secretFriend: secretFriend },
-      //   {
-      //     new: true,
-      //   }
-      // );
-      // await users.save();
-      if (!users) {
+      const draw = await Draw.find();
+      if (!draw) {
         return response.status(404).json("not found");
       }
-      return response.status(200).json(users);
+      return response.status(200).json(draw);
     } catch (err) {
       response.status(500).json(err);
     }
   },
   async delete(request: Request, response: Response) {
-    const { emailUser } = request.params;
-    const userDeleted = await User.findOneAndDelete({ email: emailUser });
-    // await userDeleted?.save();
-    if (!userDeleted) {
-      return response.status(404).json({ message: "user not found" });
+    const { emailDraw } = request.params;
+    const DrawDeleted = await Draw.findOneAndDelete({ email: emailDraw });
+    // await DrawDeleted?.save();
+    if (!DrawDeleted) {
+      return response.status(404).json({ message: "Draw not found" });
     }
-    return response.json({ userDeleted });
+    return response.json({ DrawDeleted });
   },
 };

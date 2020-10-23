@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const UserSchema = new mongoose.Schema(
+const DrawSchema = new mongoose.Schema(
   {
     draw: [
       {
@@ -10,9 +10,8 @@ const UserSchema = new mongoose.Schema(
       },
     ],
 
-    didWho: {
+    who: {
       type: String,
-      default: "Henrique",
     },
   },
   {
@@ -23,8 +22,8 @@ const UserSchema = new mongoose.Schema(
   }
 );
 
-const User = mongoose.model("User", UserSchema);
-export default User;
+const Draw = mongoose.model("Draw", DrawSchema);
+export default Draw;
 // name: {
 //   type: String,
 //   trim: true,
