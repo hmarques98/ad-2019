@@ -25,6 +25,7 @@ const DashBoard: React.FC = () => {
       alert("preencha os campos que faltam");
     }
   }, [email, name, setUser, users]);
+
   useEffect(() => {
     localStorage.setItem("user", JSON.stringify(users));
   }, [users]);
@@ -60,7 +61,7 @@ const DashBoard: React.FC = () => {
           Cadastrar participante
         </CustomButton>
       </Form>
-      {users.length >= 1 && (
+      {users.length >= 4 && (
         <Link className="link" to="draw-page">
           <CustomButton customColor="hsla(16, 87%, 62%,1)">
             Ver lista de cadastrados
